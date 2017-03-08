@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch@GOS</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/datepicker3.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+
+<!--Icons-->
+<script src="js/lumino.glyphs.js"></script>
+<script src="js/watch_gos.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"><span>Watch</span>@GOS</a>
+				<ul class="user-menu">
+					<li class="dropdown pull-right">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> User <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="main.html"><svg class="glyph stroked dashboard dial"><use xlink:href="#stroked-dashboard-dial"/></svg> Dashboard</a></li>
+							<li><a href="chpassword.html"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Change password</a></li>
+							<script>
+								//alert();
+								if(getCookie("USER")==='watch'){
+									document.write('<li><a href="config.html"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Configuration</a></li>');
+								}
+							</script>
+							
+
+							<li><a href="#" onClick=logOut();><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+							
+		</div><!-- /.container-fluid -->
+	</nav>
+
+
+
+
+
+
+
+
+
+	<div class="col-sm-9 col-sm-offset-1 col-lg-10 col-lg-offset-1 main">		
+		<!-- <div class="row">
+			<ol class="breadcrumb">
+				<li><a href="#"><svg class="glyph stroked home"><use xlink:href="#stroked-home"></use></svg></a></li>
+				<li class="active">Icons</li>
+			</ol>
+		</div> --><!--/.row-->
+				
+		
+		<div class="row">
+			<div class="col-lg-12">
+				<div class="panel panel-default">
+					<div class="panel-heading">Edit Configurations</div>
+					<div class="panel-body">
+						<div class="col-md-12">
+							<form role="form">
+							
+								<div class="form-group">
+									<label>ID location</label>
+									<input readonly=readonly id="id_location" type="text" class="form-control" value="">
+								</div>
+																
+								<div class="form-group">
+									<label>Location name</label>
+									<input id="loc_name" placeholder="BuildingA1" type="text" class="form-control">
+								</div>	
+
+								<div class="form-group">
+									<label>Location description</label>
+									<input id="loc_description" placeholder="Main gate of building A" type="text" class="form-control">
+								</div>
+
+								<div class="form-group">
+									<label>District</label>
+									<input id="district" placeholder="Aurora" type="text" class="form-control">
+								</div>
+								
+								<div class="form-group">
+									<label>State</label>
+									<input id="state" placeholder="Utah" type="text" class="form-control">
+								</div>
+								
+								<div class="form-group">
+									<label>lattitude</label>
+									<input id="lat" placeholder="38.9261161" type="text" class="form-control">
+								</div>
+								
+								<div class="form-group">
+									<label>Longitude</label>
+									<input id="lng" placeholder="-111.9376885" type="text" class="form-control">
+								</div>
+								
+								<div class="form-group">
+									<label>Collector server Ip</label>
+									<input id="collector_server_ip" placeholder="goswatch.myvnc.com" type="text" class="form-control">
+								</div>
+								
+								<div class="form-group">
+									<label>Local IP</label>
+									<input id="local_ip" placeholder="10.20.125.26" type="text" class="form-control">
+								</div>
+								<br>
+
+								<div class="form-group">
+									<label>Distance between camera and objects to detect (in centimeter)</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									<input id="camera_distance" type="range" min="100" max="500" step="1"/>
+								</div>
+								<div class="form-group">
+									<label>Width [for development only (in pixel)]</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									<input id="contours_width" placeholder="22" type="text" class="form-control" value="22">
+								</div>
+								<div class="form-group">
+									<label>Height [for development only (in pixel)]</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									<input id="contours_height" placeholder="16" type="text" class="form-control" value="16">
+								</div>
+
+								<div class="form-group">
+									<label>Line 1 Point 1 (x,y)</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									(<input id="line1_point1_x" placeholder="0" size="3" type="text" value="0">,
+									<input id="line1_point1_y" placeholder="150" size="3" type="text" value="150">)
+								</div>
+
+								<div class="form-group">
+									<label>Line 1 Point 2 (x,y)</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									(<input id="line1_point2_x" placeholder="400" size="3" type="text" value="400">,
+									<input id="line1_point2_y" placeholder="150" size="3" type="text" value="150">)
+								</div>
+
+								<div class="form-group">
+									<label>Line 2 Point 1 (x,y)</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									(<input id="line2_point1_x" placeholder="0" size="3" type="text" value="0">,
+									<input id="line2_point1_y" placeholder="200" size="3" type="text" value="200">)
+								</div>
+
+								<div class="form-group">
+									<label>Line 2 Point 2 (x,y)</label>
+									<!-- <input placeholder="Pintu masuk UTC Melaka 1" type="text" class="form-control"> -->
+									(<input id="line2_point2_x" placeholder="400" size="3" type="text" value="400">,
+									<input id="line2_point2_y" placeholder="200" size="3" type="text" value="200">)
+								</div>
+
+								<center>
+									<button id="config" type="button" class="btn btn-primary">Save configuration</button>
+									<button type="reset" class="btn btn-default">Reset </button>
+									<p>Version 1.x is available, <a href="#">upgrade now</a></p>
+								</center>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div><!-- /.col-->
+		</div><!-- /.row -->
+		
+	</div><!--/.main-->
+
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/chart.min.js"></script>
+	<!-- <script src="js/chart-data.js"></script>
+	<script src="js/easypiechart.js"></script>
+	<script src="js/easypiechart-data.js"></script> -->
+	<script src="js/bootstrap-datepicker.js"></script>
+	<script>
+		// !function ($) {
+		// 	$(document).on("click","ul.nav li.parent > a > span.icon", function(){		  
+		// 		$(this).find('em:first').toggleClass("glyphicon-minus");	  
+		// 	}); 
+		// 	$(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+		// }(window.jQuery);
+
+		// $(window).on('resize', function () {
+		//   if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		// })
+		// $(window).on('resize', function () {
+		//   if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		// })
+	</script>
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+		//alert(getCookie("USER"));
+	    if (getCookie("USER") === '' || getCookie("KEY")==='') {
+	    	//alert('credential true, redirect to main page');
+	    	deleteCookie("USER");
+	    	deleteCookie("KEY");
+	    	deleteCookie("ID");
+	    	deleteCookie("LOC");
+	        window.location.replace('index.html');
+	        //window.location.href ='index.html';
+	    }
+
+		getLocation();
+
+		function getLocation(){
+
+			$.ajax({
+			type: "POST",
+			//datatype: "jsonp",
+			datatype: "json",                           
+			url: server+localAPI+"/locationinfo",
+	    	crossDomain: true,
+			//data: {name},                                                                
+			success: handleLocationData,
+				error: function () {                    
+					alert('Unable to load location info...');
+				}
+			});
+
+		}
+		
+		var id_location = null;
+		var loc_name = null;
+		var loc_description = null;
+		var district = null;
+		var state = null;
+		var lat = null;
+		var lng = null;
+		var collector_server_ip = null;
+		var local_ip = null;
+		var contours_width = null;
+		var contours_height = null;
+		var line1_point1_x = null;
+		var line1_point1_y = null;
+		var line1_point2_x = null;
+		var line1_point2_y = null;
+		var line2_point1_x = null;
+		var line2_point1_y = null;
+		var line2_point2_x = null;
+		var line2_point2_y = null;
+		var camera_distance = null;
+
+		function handleLocationData(data){
+						 
+			//$('#id_location').val(data['id_location']);
+			id_location = data['id_location'];
+			setCookie("LOC",id_location,0.1);
+			id_location = getCookie("LOC");
+
+			if (data['id_location'] !== null || data['id_location'] !== '') {
+				console.log("IN "+id_location);
+            	$('#id_location').val(data['id_location']);
+            	$('#loc_name').val(data['loc_name']);
+            	$('#loc_description').val(data['loc_description']);
+            	$('#district').val(data['district']);
+            	$('#state').val(data['state']);
+            	$('#lat').val(data['lat']);
+            	$('#lng').val(data['lng']);
+            	$('#collector_server_ip').val(data['collector_server_ip']);
+            	$('#local_ip').val(data['local_ip']);
+            	$('#contours_width').val(data['contours_width']);
+            	$('#contours_height').val(data['contours_height']);
+            	$('#line1_point1_x').val(data['line1_point1_x']);
+            	$('#line1_point1_y').val(data['line1_point1_y']);
+            	$('#line1_point2_x').val(data['line1_point2_x']);
+            	$('#line1_point2_y').val(data['line1_point2_y']);
+            	$('#line2_point1_x').val(data['line2_point1_x']);
+            	$('#line2_point1_y').val(data['line2_point1_y']);
+            	$('#line2_point2_x').val(data['line2_point2_x']);
+            	$('#line2_point2_y').val(data['line2_point2_y']);
+            	$('#camera_distance').val(data['camera_distance']);
+
+            }
+            else {
+            	alert('No data');
+            } 
+
+			// submitconfig();
+
+		}
+		// alert("state"+state);
+		// alert("camera_distance"+camera_distance);
+
+		$('#config').click(function() {
+			var id_location = getCookie("LOC");
+			$.ajax({
+				type: "POST", 
+				url: server+localAPI+"/processconfig",
+				// url: "http://localpi/processconfig",
+				data: {
+					id_location : id_location,
+					loc_name : $('#loc_name').val(),
+					loc_description : $('#loc_description').val(),
+					district : $('#district').val(),
+					state : $('#state').val(),
+					lat : $('#lat').val(),
+					lng : $('#lng').val(),
+					collector_server_ip : $('#collector_server_ip').val(),
+					local_ip : $('#local_ip').val(),
+					camera_distance : $('#camera_distance').val(),
+					contours_width : $('#contours_width').val(),
+					contours_height : $('#contours_height').val(),
+					line1_point1_x : $('#line1_point1_x').val(),
+					line1_point1_y : $('#line1_point1_y').val(),
+					line1_point2_x : $('#line1_point2_x').val(),
+					line1_point2_y : $('#line1_point2_y').val(),
+					line2_point1_x : $('#line2_point1_x').val(),
+					line2_point1_y : $('#line2_point1_y').val(),
+					line2_point2_x : $('#line2_point2_x').val(),
+					line2_point2_y : $('#line2_point2_y').val(),
+					status : "1".toString()
+					// status : $('#status').val()
+
+				},            
+				success: function(data) {	                
+
+	                var error = data['config']['error'];
+	                var msg = data['config']['message'];
+
+	                // alert(error);
+
+
+		            if (error === false) {
+		            	$.ajax({
+							type: "POST", 
+							url: cloud+cloudAPI+"/updateconfig", // send to cloud
+							// url: "http://localpi/processconfig",
+							data: {
+								id_location : id_location,
+								loc_name : $('#loc_name').val(),
+								loc_description : $('#loc_description').val(),
+								district : $('#district').val(),
+								state : $('#state').val(),
+								lat : $('#lat').val(),
+								lng : $('#lng').val(),
+								collector_server_ip : $('#collector_server_ip').val(),
+								local_ip : $('#local_ip').val(),
+								camera_distance : $('#camera_distance').val(),
+								contours_width : $('#contours_width').val(),
+								contours_height : $('#contours_height').val(),
+								line1_point1_x : $('#line1_point1_x').val(),
+								line1_point1_y : $('#line1_point1_y').val(),
+								line1_point2_x : $('#line1_point2_x').val(),
+								line1_point2_y : $('#line1_point2_y').val(),
+								line2_point1_x : $('#line2_point1_x').val(),
+								line2_point1_y : $('#line2_point1_y').val(),
+								line2_point2_x : $('#line2_point2_x').val(),
+								line2_point2_y : $('#line2_point2_y').val(),
+								status : "1".toString()
+								// status : $('#status').val()
+
+							},            
+							success: function(data) {	                
+
+				                var error = data['config']['error'];
+				                var msg = data['config']['message'];
+
+				                // alert(error);
+
+
+					            if (error === false) {
+					            	alert(msg);
+					            }
+					            else {
+					            	alert(msg);
+					            }
+							},
+							error: function (e) {    
+								console.log(e);               
+								alert('Unable to connect to the server [update config on cloud]..');                                        
+							}
+						});
+		            	alert(msg);
+		            }
+		            else {
+		            	alert(msg);
+		            }
+				},
+				error: function (e) {    
+					console.log(e);               
+					alert('Unable to connect to the server [update config on local]..');                                        
+				}
+			});
+	    });
+	});	
+	</script>
+</body>
+
+</html>

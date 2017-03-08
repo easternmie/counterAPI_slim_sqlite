@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log Masuk</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/datepicker3.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+	
+	<div class="row">
+		<div class="col-xs-9 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+			<div class="login-panel panel panel-default">
+				<div class="panel-heading">Install</div>
+				<div class="panel-body">
+					<!-- <form role="form" action="process/process_login.php" method="post"> -->
+					<form role="form">
+						<fieldset>
+							<div class="form-group">
+								<input id="id_location" class="form-control" placeholder="ID Location" name="id_location" type="text" value="" readonly="readonly">
+							</div>
+							<div class="form-group">
+								<input id="admin_name" class="form-control" placeholder="Admin user" name="admin_name" type="text" autofocus="" value="">
+							</div>
+							<div class="form-group">
+								<input id="password" class="form-control" placeholder="admin password" name="password" type="password" value="">
+							</div>
+							<div class="form-group">
+								<input id="loc_name" class="form-control" placeholder="Location name" name="loc_name" type="text" autofocus="" value="">
+							</div>
+							<div class="form-group">
+								<input id="loc_description" class="form-control" placeholder="Location description" name="loc_description" type="text" value="">
+							</div>
+<!-- 							<div class="checkbox">
+								<label>
+									<input name="remember" type="checkbox" value="Remember Me">Remember Me
+								</label>
+							</div> -->
+							<!-- <input type="submit" class="btn btn-primary" name="login" value="Login"> --> 
+							<a id="install" href="#" class="btn btn-primary">Install</a>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div><!-- /.col
+	</div><!-- /.row -->	
+	
+		
+
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/chart.min.js"></script>
+	<!-- <script src="js/chart-data.js"></script>
+	<script src="js/easypiechart.js"></script>
+	<script src="js/easypiechart-data.js"></script> -->
+	<script src="js/bootstrap-datepicker.js"></script>
+
+	<script src="js/watch_gos.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+		
+		//alert('server : '+server);
+
+		if(typeof(EventSource) !== "undefined") {
+		    var sourceIn = new EventSource(cloud + cloudAPI +"/latestidlocation");
+		    sourceIn.onmessage = function(event) {
+		    	console.log(event.data);
+		        document.getElementById("id_location").value = event.data;
+
+	    	};
+		} else {
+		    document.getElementById("id_location").innerHTML = "Sorry, browser does not support server-sent events...";
+		}
+
+	    
+	    $('#install').click(function() {
+			var id_location = $('#id_location').val();
+			var admin_name = $('#uname').val();
+			var password = $('#pword').val();
+			var loc_name = $('#loc_name').val();
+			var loc_description = $('#loc_description').val();
+			var last_update = Date.parse("Y-m-d H:i:s").toString();
+			var currentdate = new Date(); 
+   //  		var datetime = currentdate.getFullYear() + "-"
+   //              + (currentdate.getMonth()+1)  + "-" 
+   //              + currentdate.getDate() + " "  
+   //              + currentdate.getHours() + ":"  
+   //              + currentdate.getMinutes() + ":" 
+   //              + currentdate.getSeconds();
+			// alert(datetime);
+
+			if(id_location === '' || admin_name === '' || password === '' || loc_name === '' || loc_description === ''){
+				alert ('Please fill in all inputs');
+			}
+			else{
+				$.ajax({
+					type: "POST", 
+					url: cloud+cloudAPI + "/install",
+					data: {
+						id_location: $("#id_location").val(),
+						admin_name: $("#admin_name").val(),
+						password: $("#password").val(),
+						loc_name: $("#loc_name").val(),
+						loc_description: $("#loc_description").val()
+						//last_update: "2016-05-10 22:39:44"
+					},            
+					success: function(data) {
+						//alert('Successfully saved...');
+
+
+
+		                //console.log(data['admin']);
+		                
+
+		                var error = data['install']['error'];
+		                var u = data['install']['admin_name'];
+		                var k = data['install']['admin_key'];
+		                var i = data['install']['id_admin'];
+
+		                console.log(error);
+		                // console.log(u);
+		                // console.log(k);
+		                // console.log(i);
+
+
+			            if (error === false) {
+			            	alert('credential true, proceed to install sqlite');
+
+
+
+							$.ajax({
+								type: "POST", 
+								url: server+localAPI + "/install",
+								data: {
+									id_location:$("#id_location").val(),
+									loc_name: $("#loc_name").val(),
+									loc_description: $("#loc_description").val()
+								},            
+								success: function(data) {
+									//alert('Successfully saved...');
+
+
+
+					                //console.log(data['admin']);
+					                
+
+					                var error = data['install']['error'];
+					                var msg = data['install']['message'];
+
+					                console.log(error);
+					                console.log(msg);
+
+
+						            if (error === false) {
+						            	alert('install completed');
+		                				window.location.replace('index.html');
+						            }
+						            else {
+						               alert('failed install sqlite');
+						            }
+								},
+								error: function (e) {    
+									console.log(e);               
+									alert('Unable to connect to the local server..');                                        
+								}
+							});
+
+
+
+			                //window.location.replace('v1/config');
+			            }
+			            else {
+			               alert('Invalid Credentials');
+			            }
+					},
+					error: function (e) {    
+						console.log(e);               
+						alert('Unable to connect to the cloud server..');                                        
+					}
+				});
+			}
+			
+	    });
+	});
+	</script>	
+</body>
+
+</html>

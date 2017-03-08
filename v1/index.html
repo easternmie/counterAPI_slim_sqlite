@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Log Masuk</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/datepicker3.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+	
+	<div class="row">
+		<div class="col-xs-9 col-xs-offset-1 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4">
+			<div class="login-panel panel panel-default">
+				<div class="panel-heading">Log in</div>
+				<div class="panel-body">
+					<!-- <form role="form" action="process/process_login.php" method="post"> -->
+					<form role="form">
+						<fieldset>
+							<div class="form-group">
+								<input id="uname" class="form-control" placeholder="username" name="uname" type="text" autofocus="">
+							</div>
+							<div class="form-group">
+								<input id="pword" class="form-control" placeholder="password" name="pword" type="password" value="">
+							</div>
+<!-- 							<div class="checkbox">
+								<label>
+									<input name="remember" type="checkbox" value="Remember Me">Remember Me
+								</label>
+							</div> -->
+							<!-- <input type="submit" class="btn btn-primary" name="login" value="Login"> --> 
+							<a id="login" href="#" class="btn btn-primary">Login</a>
+						</fieldset>
+					</form>
+				</div>
+			</div>
+		</div><!-- /.col
+	</div><!-- /.row -->	
+	
+		
+
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/chart.min.js"></script>
+	<!-- <script src="js/chart-data.js"></script>
+	<script src="js/easypiechart.js"></script>
+	<script src="js/easypiechart-data.js"></script> -->
+	<script src="js/bootstrap-datepicker.js"></script>
+
+	<script src="js/watch_gos.js"></script>
+
+	<script type="text/javascript">
+	$(document).ready(function() {
+		
+		//alert('server : '+server);
+	    
+	    $('#login').click(function() {
+			var uname = $('#uname').val();
+			var pword = $('#pword').val();
+			//var jsonData = '{"uname":"'+ uname +'","pword":"'+ pword +'"}';
+
+			//console.log(jsonData);
+			$.ajax({
+				type: "POST", 
+				url: server+localAPI+"/login",
+				data: {
+					uname: $("#uname").val(),
+					pword: $("#pword").val()
+				},            
+				success: function(data) {
+					//alert('Successfully saved...');
+
+
+
+	                console.log(data['user']);
+	                
+
+	                var error = data['user']['error'];
+	                var u = data['user']['uname'];
+	                var k = data['user']['api_key'];
+	                var i = data['user']['id_user'];
+
+	                //console.log(error);
+
+
+		            if (error === false) {
+		            	//alert('credential true, redirect to main page');
+		            	setCookie("USER",u,0.1);
+		            	setCookie("KEY",k,0.1);
+		            	setCookie("ID",i,0.1);
+		            	//alert(getCookie("USER"));
+		                window.location.replace('main.html');
+		            }
+		            else {
+		               alert('Invalid Credentials');
+		            }
+				},
+				error: function (e) {    
+					//console.log(e);               
+					alert('Unable to connect to the server..');                                        
+				}
+			});
+	    });
+	});
+	</script>	
+</body>
+
+</html>

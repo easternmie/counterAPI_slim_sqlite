@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Watch@GOS</title>
+
+<link href="css/bootstrap.min.css" rel="stylesheet">
+<link href="css/datepicker3.css" rel="stylesheet">
+<link href="css/styles.css" rel="stylesheet">
+
+	<!-- script src="js/chart.min.js"></script -->
+	<!-- script src="js/chart-data.js"></script-->
+
+<!--Icons-->
+<script src="js/lumino.glyphs.js"></script>
+<script src="js/watch_gos.js"></script>
+
+<!--[if lt IE 9]>
+<script src="js/html5shiv.js"></script>
+<script src="js/respond.min.js"></script>
+<![endif]-->
+
+</head>
+
+<body>
+	<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a class="navbar-brand" href="#"><span>Watch</span>@GOS</a>
+				<ul class="user-menu">
+					<li class="dropdown pull-right">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> User <span class="caret"></span></a>
+						<ul class="dropdown-menu" role="menu">
+							<li><a href="main.html"><svg class="glyph stroked dashboard dial"><use xlink:href="#stroked-dashboard-dial"/></svg> Dashboard</a></li>
+							<li><a href="chpassword.html"><svg class="glyph stroked male-user"><use xlink:href="#stroked-male-user"></use></svg> Change password</a></li>
+							<script>
+								//alert();
+								if(getCookie("USER")==='watch'){
+									document.write('<li><a href="config.html"><svg class="glyph stroked gear"><use xlink:href="#stroked-gear"></use></svg> Configuration</a></li>');
+								}
+							</script>
+							
+
+							<li><a href="#" onClick=logOut();><svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"></use></svg> Logout</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+							
+		</div><!-- /.container-fluid -->
+	</nav>
+
+
+
+
+
+
+
+	<div class="col-sm-9 col-sm-offset-1 col-lg-10 col-lg-offset-1 main">
+		<!-- <div class="row"> -->
+			<div style="font-size:11px;" class="col-lg-12">
+				Location Name : <span style="font-weight:bold;" id="loc_name"></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Description : <span style="font-weight:bold;" id="loc_description"></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;District : <span style="font-weight:bold;" id="district"></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;State : <span style="font-weight:bold;" id="state"></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Collector server IP : <span style="font-weight:bold;" id="collector_server_ip"></span>
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Local IP : <span style="font-weight:bold;" id="local_ip"></span>
+			</div>
+		<!-- </div> -->
+		<!--/.row-->
+		<div class="row">
+			<div class="col-xs-12 col-md-4 col-lg-4">
+				<div class="panel panel-green panel-widget ">
+<!-- 					<div class="row no-padding">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"/></svg>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div id="total" class="large">0</div>
+							<div class="text-muted">In today</div>
+						</div>
+					</div> -->
+				</div>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-md-4 col-lg-4">
+				<div class="panel panel-green panel-widget ">
+					<div class="row no-padding">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<svg class="glyph stroked checkmark"><use xlink:href="#stroked-checkmark"/></svg>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div id="total" class="large">0</div>
+							<div class="text-muted">In today</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-4 col-lg-4">
+				<div class="panel panel-orange panel-widget">
+					<div class="row no-padding">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<svg class="glyph stroked cancel"><use xlink:href="#stroked-cancel"/></svg>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div id="out" class="large">0</div>
+							<div class="text-muted">Out today</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-xs-12 col-md-4 col-lg-4">
+				<div class="panel panel-blue panel-widget">
+					<div class="row no-padding">
+						<div class="col-sm-3 col-lg-5 widget-left">
+							<svg class="glyph stroked line-graph"><use xlink:href="#stroked-line-graph"></use></svg>
+						</div>
+						<div class="col-sm-9 col-lg-7 widget-right">
+							<div id="in" class="large">0</div>
+							<div class="text-muted">Total today</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+<!-- 			<div class="row">
+				<div class="col-xs-12">
+					<div class="panel panel-blue panel-widget">
+						<div class="panel-body">
+							<div class="col-sm-3 col-lg-5 ">
+								<canvas class="main-chart" id="line-chart" height="200" width="600"></canvas>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div> -->
+			<!--/.row-->
+
+			<div class="row">
+				<div class="col-lg-12">
+					<center>
+						<button id="start" type="button" class="btn btn-primary">&nbsp;&nbsp;&nbsp;Start&nbsp;&nbsp;&nbsp;</button>&nbsp;&nbsp;&nbsp;
+						<!-- <button id="stop" type="button" class="btn btn-default">&nbsp;&nbsp;&nbsp;Stop&nbsp;&nbsp;&nbsp;</button> -->
+					</center>
+				</div>
+			</div><!--/.row-->
+		</div><!--/.row-->
+
+	</div>	<!--/.main-->
+
+
+	
+
+	<script src="js/jquery-1.11.1.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script type="text/javascript">
+	
+
+	$(document).ready(function() {
+
+		
+
+		//alert(getCookie("USER"));
+	    if (getCookie("USER") === '' || getCookie("KEY")==='') {
+	    	//alert('credential true, redirect to main page');
+	    	deleteCookie("USER");
+	    	deleteCookie("KEY");
+	    	deleteCookie("ID");
+	    	deleteCookie("LOC");
+	        window.location.replace('index.html');
+	        //window.location.href ='index.html';
+	    }
+
+		// var domain = "http://10.20.125.30";
+		// var server = "http://localhost";
+		
+		getLocation();
+
+		//var id_location = parseInt(getCookie("LOC"));
+		//var id_location = getCookie("LOC");
+
+		// console.log("OUT "+id_location);
+
+		function getLocation(){
+
+			$.ajax({
+			type: "POST",
+			//datatype: "jsonp",
+			datatype: "json",                           
+			url: server+localAPI+"/locationinfo",
+	    	crossDomain: true,
+			//data: {name},                                                                
+			success: handleLocationData,
+				error: function () {                    
+					alert('Unable to load location info...');
+				}
+			});
+
+		}
+		
+		var id_location = null;
+		var collector_server_ip = null;
+		var local_ip = null;
+
+		function handleLocationData(data){
+						 
+			//$('#id_location').val(data['id_location']);
+			id_location = data['id_location'];
+
+			collector_server_ip = data['collector_server_ip'];
+			local_ip = data['local_ip'];
+
+			setCookie("LOC",id_location,0.1);
+			id_location = getCookie("LOC");
+
+			// console.log("IN "+id_location);
+
+			$('#loc_name').html(data['loc_name']);                
+			$('#loc_description').html(data['loc_description']);                
+			$('#district').html(data['district']);               
+			$('#state').html(data['state']);               
+			$('#collector_server_ip').html(data['collector_server_ip']);               
+			$('#local_ip').html(data['local_ip']);  
+
+			eventSource(id_location);
+
+			//var id_location = $('#id_location').val();
+			//alert("Test " + id_location);  
+
+		}
+
+
+
+
+	    $(document).on("click","ul.nav li.parent > a > span.icon", function(){
+	        $(this).find('em:first').toggleClass("glyphicon-minus");
+	    });
+	    $(".sidebar span.icon").find('em:first').addClass("glyphicon-plus");
+
+	    $(window).on('resize', function () {
+	  		if ($(window).width() > 768) $('#sidebar-collapse').collapse('show')
+		});
+		$(window).on('resize', function () {
+		  if ($(window).width() <= 767) $('#sidebar-collapse').collapse('hide')
+		});
+
+
+
+
+
+
+
+	    $('#start').click(function() {
+	    	if(local_ip == null || local_ip == '' || local_ip == ' '){
+	    		alert('Set local IP in configuration');
+	    	}
+	    	else{
+				$.ajax({
+					type: "POST", 
+					url: server+localAPI + "/start",
+					data: {
+					},            
+					success: function(data) {
+		                
+
+		                console.log(error);
+		                var error = data['start']['error'];
+		                var msg = data['start']['message'];
+
+
+			            if (error === false) {
+			            	alert(msg);
+
+			            }
+			            else {
+			            	alert(msg);
+			            }
+					},
+					error: function (e) {    
+						// console.log(e);               
+						alert('Unable to connect to the cloud server..');                                        
+					}
+				});
+	    	}
+			
+			
+	    });
+
+
+
+
+
+		// console.log(id_location);
+		function eventSource(id_loc){
+
+			// setInterval(function(){
+			// 	// alert("test");
+			//     $.ajax({ 
+			//     	url: server + localAPI +"/in/" + id_loc,
+			//     	success: function(data){
+			//         //Update your dashboard gauge
+			//         console.log(data.in);
+			//         // salesGauge.setValue(data.value);
+			//     }, 
+			//     dataType: "json"
+			// 	});
+			// }, 3000);
+			
+
+
+
+
+			(function ulangIn(){
+				setTimeout(function(){
+					$.ajax({ 
+						url: server + localAPI +"/in/" + id_loc, 
+						success: function(data){
+						//Update your dashboard gauge
+						// console.log(data.in);
+						document.getElementById("in").innerHTML = data.in;
+
+						//Setup the next poll recursively
+						ulangIn();
+						}, 
+						dataType: "json"
+					});
+				}, 500);
+			})();
+
+			(function ulangOut(){
+				setTimeout(function(){
+					$.ajax({ 
+						url: server + localAPI +"/out/" + id_loc, 
+						success: function(data){
+						//Update your dashboard gauge
+						// console.log(data.out);
+						document.getElementById("out").innerHTML = data.out;
+
+						//Setup the next poll recursively
+						ulangOut();
+						}, 
+						dataType: "json"
+					});
+				}, 500);
+			})();
+
+			(function ulangTotal(){
+				setTimeout(function(){
+					$.ajax({ 
+						url: server + localAPI +"/total/" + id_loc, 
+						success: function(data){
+						//Update your dashboard gauge
+						// console.log(data.total);
+						document.getElementById("total").innerHTML = data.total;
+
+						//Setup the next poll recursively
+						ulangTotal();
+						}, 
+						dataType: "json"
+					});
+				}, 500);
+			})();
+
+
+
+
+			// if(typeof(EventSource) !== "undefined") {
+			//     //var sourceIn = new EventSource(server + localAPI + "/in/1");
+			//     var sourceIn = new EventSource(server + localAPI +"/in/" + id_loc);
+			//     // console.log(id_location);
+
+
+			//     sourceIn.addEventListener("message", function(e) {
+   //          		console.log(e.data);
+			// 	}, false);
+
+
+			//     // sourceIn.onmessage = function(event) {
+			//     //     document.getElementById("in").innerHTML = event.data;
+		 //    	// };
+			// } else {
+			//     document.getElementById("in").innerHTML = "Sorry, browser does not support server-sent events...";
+			// }
+
+			// if(typeof(EventSource) !== "undefined") {
+			//     var sourceOut = new EventSource(server + localAPI + "/out/" + id_loc);
+
+
+			//     sourceOut.addEventListener("message", function(e) {
+   //          		console.log(e.data);
+			// 	}, false);
+
+
+			//     // sourceOut.onmessage = function(event) {
+			//     //     document.getElementById("out").innerHTML = event.data;
+		 //    	// };
+			// } else {
+			//     document.getElementById("out").innerHTML = "Sorry, browser does not support server-sent events...";
+			// }
+
+			// if(typeof(EventSource) !== "undefined") {
+			//     var sourceTotal = new EventSource(server + localAPI + "/total/" + id_loc);
+			    
+
+			//     sourceTotal.addEventListener("message", function(e) {
+   //          		console.log(e.data);
+			// 	}, false);
+
+
+			//     // sourceTotal.onmessage = function(event) {
+			//     //     document.getElementById("total").innerHTML = event.data;
+			//     // };
+			// } else {
+			//     document.getElementById("total").innerHTML = "Sorry, browser does not support server-sent events...";
+			// }
+		}
+
+
+		function setCookie(c_name,c_value,exdays) {
+			var exdate=new Date();
+			exdate.setDate(exdate.getDate() + exdays);
+			document.cookie=encodeURIComponent(c_name) 
+			+ "=" + encodeURIComponent(c_value)
+			+ (!exdays ? "" : "; expires="+exdate.toUTCString());
+			;
+		}
+
+		function getCookie(cname) {
+		    var name = cname + "=";
+		    var ca = document.cookie.split(';');
+		    for(var i = 0; i <ca.length; i++) {
+		        var c = ca[i];
+		        while (c.charAt(0)==' ') {
+		            c = c.substring(1);
+		        }
+		        if (c.indexOf(name) == 0) {
+		            return c.substring(name.length,c.length);
+		        }
+		    }
+		    return "";
+		}
+		function deleteCookie(name) {
+		  document.cookie = name +'=; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		}
+
+	});
+	</script>
+
+
+</body>
+
+</html>
